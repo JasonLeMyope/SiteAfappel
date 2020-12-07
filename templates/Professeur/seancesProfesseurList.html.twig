@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+    <h1> Seances </h1>
+
+    <div class="container">
+        {% if seances is empty %}
+            <strong>Vous n'avez réalisé aucune séance de cours pour le moment.</strong>
+        {% else %}
+            <table class="table">
+                <thead class="table-primary">
+                <td>Date</td>
+                <td>Matière</td>
+                <td>Groupes</td>
+                <td>Absences</td>
+                </thead>
+                <tbody>
+                {% for seance in seances %}
+                    <tr>
+                        <td>{{ seance.getDateString() }}</td>
+                        <td>{{ seance.matiere.nomMatiere }}</td>
+                        <td>
+                        {% for groupe in seance.groupes %}
+                            {{ groupe.nomGroupe }}
+                        {% endfor %}
+                        </td>
+                        <td>{{ seance.absences|length }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+{% endblock %}
