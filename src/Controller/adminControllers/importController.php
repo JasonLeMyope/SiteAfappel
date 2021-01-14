@@ -2,12 +2,17 @@
 
 namespace App\Controller\adminControllers;
 
+use App\Entity\Promotion;
+use App\Type\ImportType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Twig\Environment;
 
 /**
@@ -18,15 +23,31 @@ class importController extends AbstractController {
     /**
      * @Route("/admin/import", name="admin.import")
      * @param Request $request
+     * @param SluggerInterface $slugger
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
      */
-    public function showList(Request $request, Environment $twig,  EntityManagerInterface $manager)
+    public function import(Request $request, SluggerInterface $slugger, Environment $twig,  EntityManagerInterface $manager): Response
     {
-        return new Response($twig->render('Admin/adminImport.html.twig'));
+        $form = $this->createForm(ImportType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $brochureFile */
+            $brochureFile = $form->get('tableau')->getData();
+            $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
+            $safeFilename = $slugger->slug($originalFilename);
+            $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+            try {
+                $brochureFile->move(
+                    $this->getParameter('table_directory'),
+                    $newFilename
+                );
+            } catch (FileException $e) {}
+            return $this->redirectToRoute('index.index');
+        }
+
+        $tabPromotions = $manager->getRepository(Promotion::class)->findAll();
+        return $this->render('Admin/adminImport.html.twig', ['form' => $form->createView(), 'promotions' => $tabPromotions]);
     }
 }

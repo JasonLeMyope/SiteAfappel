@@ -27,7 +27,7 @@ class Promotion
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $anneesPromotion;
+    private $annee;
 
     /**
      * @ORM\OneToMany(targetEntity=Classe::class, mappedBy="promotion")
@@ -43,6 +43,11 @@ class Promotion
      * @ORM\Column(type="string", length=255)
      */
     private $periode;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $tableFilename;
 
     public function __construct()
     {
@@ -66,14 +71,14 @@ class Promotion
         return $this;
     }
 
-    public function getAnneesPromotion(): ?string
+    public function getAnnee(): ?string
     {
-        return $this->anneesPromotion;
+        return $this->annee;
     }
 
-    public function setAnneesPromotion(string $anneesPromotion): self
+    public function setAnnee(string $annee): self
     {
-        $this->anneesPromotion = $anneesPromotion;
+        $this->annee = $annee;
 
         return $this;
     }
@@ -128,6 +133,18 @@ class Promotion
     public function setPeriode(string $periode): self
     {
         $this->periode = $periode;
+
+        return $this;
+    }
+
+    public function getTableFilename(): ?string
+    {
+        return $this->tableFilename;
+    }
+
+    public function setTableFilename(?string $tableFilename): self
+    {
+        $this->tableFilename = $tableFilename;
 
         return $this;
     }

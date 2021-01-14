@@ -1,1 +1,41 @@
-<h1>Admin Import</h1>
+{% extends "base.html.twig" %}
+{% block body %}
+    <h1> Import de données </h1>
+    <!--{#  #}% if promotions is empty %}
+        Avant de pouvoir importer des données, il est nécessaire qu'un moins 1 promotion existe.
+    {#  #}% else %}
+        <form class="form border p-3" action="{{ path('admin.import') }}" method="post" style="border-radius: 5px;">
+            <label for="promotion">Promotion</label>
+            <div class="row">
+                <div class="form-group col">
+                    <select name="promotion">
+                        {#  #}% for promotion in promotions %}
+                            <option value="{#  #}{ promotion.id }}" {#  #}% if promotion.actuelle %} selected {#  #}% endif %}>{#  #}{ promotion.nomPromotion }}</option>
+                        {#  #}% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        </form>
+    {#  #}% endif %}-->
+    <div class="p-3 mb-2 bg-light" style="border-radius:5px;">
+        {{ form_start(form) }}
+        <div class="row">
+            <label for="promotion">Promotion</label>
+            <select name="promotion">
+                {% for promotion in promotions %}
+                <option value="{{ promotion.id }}" {% if promotion.actuelle %} selected {% endif %}>{{ promotion.nomPromotion }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row d-flex flex-column m-1">
+            {{ form_label(form.tableau) }}
+            {{ form_widget(form.tableau) }}
+            {{ form_errors(form.tableau) }}
+        </div>
+        <div class="row d-flex justify-content-center">
+            <button type="submit" class="btn btn-success m-1">OK</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

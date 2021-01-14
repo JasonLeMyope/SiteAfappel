@@ -46,12 +46,12 @@ class seancesProfesseurController extends AbstractController
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    /*public function showDetailSeance(Environment $twig,  EntityManagerInterface $manager, $id = null): Response
+    public function showDetailSeance(Environment $twig,  EntityManagerInterface $manager, $id = null): Response
     {
         $seance = $manager->getRepository(Seance::class)->findOneBy(['id' => $id]);
         if($seance->getProfesseur()->getId() != $this->getUser()->getTypeId()){
-            return new Response($twig->render('Professeur/seancesProfesseurList.html.twig', ['seance' => $seance, 'nope' => true]));
+            return new Response($twig->render('Professeur/seanceDetails.html.twig', ['seance' => $seance, 'nope' => true]));
         }
-        return new Response($twig->render('Professeur/seancesProfesseurList.html.twig', ['seance' => $seance, 'nope' => false]));
-    }*/
+        return new Response($twig->render('Professeur/seanceDetails.html.twig', ['seance' => $seance, 'nope' => false]));
+    }
 }
