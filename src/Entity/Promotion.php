@@ -44,11 +44,6 @@ class Promotion
      */
     private $periode;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $tableFilename;
-
     public function __construct()
     {
         $this->classes = new ArrayCollection();
@@ -133,18 +128,6 @@ class Promotion
     public function setPeriode(string $periode): self
     {
         $this->periode = $periode;
-
-        return $this;
-    }
-
-    public function getTableFilename(): ?string
-    {
-        return $this->tableFilename;
-    }
-
-    public function setTableFilename(?string $tableFilename): self
-    {
-        $this->tableFilename = $tableFilename;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Type;
 
 use App\Entity\Promotion;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Constraints\File;
 
 class ImportType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -27,13 +29,11 @@ class ImportType extends AbstractType
                     ])
                 ],
             ])
+            ->add('promotion', EntityType::class, [
+                'class' => Promotion::class,
+                'choice_value' => 'id',
+                'choice_label' => "nomPromotion",
+            ])
         ;
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => Promotion::class,
-        ]);
     }
 }
