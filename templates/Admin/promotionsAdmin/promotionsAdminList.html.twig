@@ -1,1 +1,48 @@
-<h1>Admin promotions list</h1>
+{% extends "base.html.twig" %}
+{% block body %}
+
+    <h1> Liste des promotions </h1>
+
+    <div class="row d-flex justify-content-center m-1">
+        <a href="{{ path('admin.promotions.create') }}" class="nav-link text-dark" style="font-size: 1.5rem;">
+            Créer une promotion
+        </a>
+    </div>
+    {% if promotions is empty %}
+        <strong>Il n'existe aucune promotion pour le moment.</strong>
+    {% else %}
+        <table class="table">
+            <thead class="table-dark">
+            <td>Nom</td>
+            <td>Periode</td>
+            <td>Année</td>
+            <td>Classes</td>
+            <td>Actuelle</td>
+            <td>Opérations</td>
+            </thead>
+            <tbody>
+            {% for promotion in promotions %}
+                <tr class="bg-light">
+                    <td>{{ promotion.nomPromotion }}</td>
+                    <td>{{ promotion.periode }}</td>
+                    <td>{{ promotion.annee }}</td>
+                    <td>
+                        {% for classe in promotion.classes %}
+                            {{ classe.nomClasse }}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if promotion.actuelle %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                    </td>
+                    <td>Opérations à venir</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

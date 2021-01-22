@@ -1,7 +1,9 @@
 {% extends "base.html.twig" %}
 {% block body %}
 
-    <h1> Absences </h1>
+    <div class="container">
+        <h1> Absences </h1>
+    </div>
 
     <div class="container p-3 mb-2 bg-light" style="border-radius:5px;">
         <form action="{{ path('etudiant.absences') }}" method="post">
@@ -42,7 +44,7 @@
                     <td>Matière</td>
                     <td>Professeur</td>
                 </thead>
-                <tbody>
+                <tbody class="bg-light">
                     {% for absence in absencesInjustifiees %}
                         <tr>
                             <td>{{ absence.seance.getDateString() }}</td>
@@ -67,7 +69,7 @@
                 <td>Professeur</td>
                 <td>Justification</td>
                 </thead>
-                <tbody>
+                <tbody class="bg-light">
                 {% for absence in absencesJustifiees %}
                     <tr>
                         <td>{{ absence.seance.getDateString() }}</td>

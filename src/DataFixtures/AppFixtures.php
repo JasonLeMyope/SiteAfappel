@@ -34,20 +34,21 @@ class AppFixtures extends Fixture
         $this->loadEtudiants($manager);
         $this->loadProfesseurs($manager);
         $this->loadSeancesAbsences($manager);
+        $this->loadAdmin($manager);
     }
 
     public function loadPromotions(objectManager $manager){
         $promotions = [
-            ['nomPromotion' => '2018-2019 S1-S3', 'anneesPromotion' => '2018-2019', 'periode' => 'S1-S3', 'actuelle' => false],
-            ['nomPromotion' => '2018-2019 S2-S4', 'anneesPromotion' => '2018-2019', 'periode' => 'S2-S4', 'actuelle' => false],
-            ['nomPromotion' => '2019-2020 S1-S3', 'anneesPromotion' => '2019-2020', 'periode' => 'S1-S3', 'actuelle' => false],
-            ['nomPromotion' => '2019-2020 S2-S4', 'anneesPromotion' => '2019-2020', 'periode' => 'S2-S4', 'actuelle' => true]
+            ['nomPromotion' => '2018-2019 S1-S3', 'annee' => '2018', 'periode' => 'S1-S3', 'actuelle' => false],
+            ['nomPromotion' => '2018-2019 S2-S4', 'annee' => '2019', 'periode' => 'S2-S4', 'actuelle' => false],
+            ['nomPromotion' => '2019-2020 S1-S3', 'annee' => '2019', 'periode' => 'S1-S3', 'actuelle' => false],
+            ['nomPromotion' => '2019-2020 S2-S4', 'annee' => '2020', 'periode' => 'S2-S4', 'actuelle' => true]
         ];
         foreach ($promotions as $promotion)
         {
             $new_promotion = new Promotion();
             $new_promotion->setNomPromotion($promotion['nomPromotion']);
-            $new_promotion->setAnneesPromotion($promotion['anneesPromotion']);
+            $new_promotion->setAnnee($promotion['annee']);
             $new_promotion->setPeriode($promotion['periode']);
             $new_promotion->setActuelle($promotion['actuelle']);
             $manager->persist($new_promotion);
@@ -487,6 +488,17 @@ class AppFixtures extends Fixture
         $absence->setJustifiee(true);
         $absence->setJustification("Panne de réveil");
         $manager->persist($absence);
+        $manager->flush();
+    }
+
+    public function loadAdmin(objectManager $manager){
+        $newUser = new User();
+        $newUser->setUsername('admin');
+        $newUser->setPassword($this->passwordEncoder->encodePassword($newUser, 'salut'));
+        $newUser->setRoles(["ROLE_ADMIN"]);
+        $newUser->setType("Admin");
+        $newUser->setTypeId(-1);
+        $manager->persist($newUser);
         $manager->flush();
     }
 }
