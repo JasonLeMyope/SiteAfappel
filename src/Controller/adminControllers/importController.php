@@ -67,7 +67,7 @@ class importController extends AbstractController {
                     $newFilename
                 );
                 $this->read($newFilename, $form->get('promotion')->getData(), $manager);
-            } catch (FileException $e) {}
+            } catch (FileException $e) {  dd($e); }
             return $this->redirectToRoute('index.index');
         }
         return $this->render('Admin/adminImport.html.twig', ['form' => $form->createView()]);
