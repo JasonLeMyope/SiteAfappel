@@ -376,14 +376,14 @@ class AppFixtures extends Fixture
 
     public function loadProfesseurs(objectManager $manager){
         $professeurs = [
-            ['username' => 'gperrot', 'arpege' => '000000001ABCD', 'prenomProfesseur' => 'Gilles', 'nomProfesseur' => 'Perrot', 'dateNaissance' => '01-01-1970', 'email' => 'gilles.perrot@univ-fcomte.fr', 'matieres' => ['Algo']],
-            ['username' => 'hjaffali', 'arpege' => '000000002ABCD', 'prenomProfesseur' => 'Hamza', 'nomProfesseur' => 'Jaffali',  'dateNaissance' => '02-01-1970', 'email' => 'hamza.jaffali@univ-fcomte.fr', 'matieres' => ['CDIN Web']],
-            ['username' => 'sdomas', 'arpege' => '000000003ABCD', 'prenomProfesseur' => 'Stéphane', 'nomProfesseur' => 'Domas', 'dateNaissance' => '03-01-1970', 'email' => 'stephane.domas@univ-fcomte.fr', 'matieres' => ['Concept. Obj']],
-            ['username' => 'msalomon', 'arpege' => '000000004ABCD', 'prenomProfesseur' => 'Michel', 'nomProfesseur' => 'Salomon', 'dateNaissance' => '04-01-1970', 'email' => 'michel.salomon@univ-fcomte.fr', 'matieres' => ['Réseau']],
-            ['username' => 'amillet', 'arpege' => '000000005ABCD', 'prenomProfesseur' => 'Alain', 'nomProfesseur' => 'Millet', 'dateNaissance' => '05-01-1970', 'email' => 'alain.millet@univ-fcomte.fr', 'matieres' => ['WEB']],
-            ['username' => 'agiersch', 'arpege' => '000000006ABCD', 'prenomProfesseur' => 'Arnaud', 'nomProfesseur' => 'Giersch', 'dateNaissance' => '06-01-1970', 'email' => 'arnaud.giersch@univ-fcomte.fr', 'matieres' => ['Système']],
-            ['username' => 'kdeschinkel', 'arpege' => '000000007ABCD', 'prenomProfesseur' => 'Karine', 'nomProfesseur' => 'Deschinkel', 'dateNaissance' => '07-01-1970', 'email' => 'karine.deschinkel@univ-fcomte.fr', 'matieres' => ['Rech. opéra.']],
-            ['username' => 'rcouturier', 'arpege' => '000000008ABCD', 'prenomProfesseur' => 'Raphaël', 'nomProfesseur' => 'Couturier', 'dateNaissance' => '08-01-1970', 'email' => 'raphael.couturier@univ-fcomte.fr', 'matieres' => ['Appli. Mobiles']]
+            ['username' => 'aneville', 'arpege' => '000000001ABCD', 'prenomProfesseur' => 'Arwen', 'nomProfesseur' => 'Neville', 'dateNaissance' => '01-01-1970', 'email' => 'arwenn.neville@test.test', 'matieres' => ['Algo']],
+            ['username' => 'bperkins', 'arpege' => '000000002ABCD', 'prenomProfesseur' => 'Brenna', 'nomProfesseur' => 'Perkins',  'dateNaissance' => '02-01-1970', 'email' => 'brenna.perkins@test.test', 'matieres' => ['CDIN Web']],
+            ['username' => 'hhulme', 'arpege' => '000000003ABCD', 'prenomProfesseur' => 'Husnain', 'nomProfesseur' => 'Hulme', 'dateNaissance' => '03-01-1970', 'email' => 'husnain.hulme@test.test', 'matieres' => ['Concept. Obj']],
+            ['username' => 'hcrouch', 'arpege' => '000000004ABCD', 'prenomProfesseur' => 'Herbie', 'nomProfesseur' => 'Crouch', 'dateNaissance' => '04-01-1970', 'email' => 'herbie.crouch@test.test', 'matieres' => ['Réseau']],
+            ['username' => 'kdavidson', 'arpege' => '000000005ABCD', 'prenomProfesseur' => 'Kody', 'nomProfesseur' => 'Davidson', 'dateNaissance' => '05-01-1970', 'email' => 'kody.davidson@test.test', 'matieres' => ['WEB']],
+            ['username' => 'vchapman', 'arpege' => '000000006ABCD', 'prenomProfesseur' => 'Viola', 'nomProfesseur' => 'Chapman', 'dateNaissance' => '06-01-1970', 'email' => 'viola.chapman@test.test', 'matieres' => ['Système']],
+            ['username' => 'mowen', 'arpege' => '000000007ABCD', 'prenomProfesseur' => 'Merryn', 'nomProfesseur' => 'Owen', 'dateNaissance' => '07-01-1970', 'email' => 'merryn.owen@test.test', 'matieres' => ['Rech. opéra.']],
+            ['username' => 'cwong', 'arpege' => '000000008ABCD', 'prenomProfesseur' => 'Casper', 'nomProfesseur' => 'Wong', 'dateNaissance' => '08-01-1970', 'email' => 'casper.wong@test.test', 'matieres' => ['Appli. Mobiles']]
         ];
         foreach($professeurs as $professeur){
             $new_professeur = new Professeur();

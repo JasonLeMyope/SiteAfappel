@@ -3,6 +3,7 @@
 namespace App\Controller\adminControllers;
 
 use App\Entity\Classe;
+use App\Entity\Promotion;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,6 @@ class classesAdminController extends AbstractController {
 
     /**
      * @Route("/admin/classes", name="admin.classes.list")
-     * @param Request $request
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @return Response
@@ -26,15 +26,16 @@ class classesAdminController extends AbstractController {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function showList(Request $request, Environment $twig,  EntityManagerInterface $manager)
+    public function showList(Environment $twig,  EntityManagerInterface $manager)
     {
+        $promotionActuelle = $manager->getRepository(Promotion::class)->findOneBy(['actuelle' => true]);
+        $classesActuelles = $manager->getRepository(Classe::class)->findBy(['promotion' => $promotionActuelle]);
         $classes = $manager->getRepository(Classe::class)->findAll();
-        return new Response($twig->render('Admin/classesAdmin/classesAdminList.html.twig', ["classes" => $classes]));
+        return new Response($twig->render('Admin/classesAdmin/classesAdminList.html.twig', ["classes" => $classes, "classesActuelles" => $classesActuelles]));
     }
 
     /**
-     * @Route("/admin/classes/{id}", name="admin.classes.edit")
-     * @param Request $request
+     * @Route("/admin/classes/show/{id}", name="admin.classes.show")
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @param null $id
@@ -43,7 +44,39 @@ class classesAdminController extends AbstractController {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function edit(Request $request, Environment $twig,  EntityManagerInterface $manager, $id = null)
+    public function show(Environment  $twig, EntityManagerInterface $manager, $id = null): Response
+    {
+        $classe = $manager->getRepository(Classe::class)->findOneBy(['id' => $id]);
+        if($classe != null){
+            return new Response($twig->render('Admin/classesAdmin/classesAdminShow.html.twig', ["classe" => $classe]));
+        }
+        return new Response($twig->render('404NotFound.html.twig'));
+    }
+
+    /**
+     * @Route("/admin/classes/create", name="admin.classes.create")
+     * @param Environment $twig
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function create(Environment $twig): Response
+    {
+        return new Response($twig->render('Admin/classesAdmin/classesAdminCreate.html.twig'));
+    }
+
+    /**
+     * @Route("/admin/classes/{id}", name="admin.classes.edit")
+     * @param Environment $twig
+     * @param EntityManagerInterface $manager
+     * @param null $id
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function edit(Environment $twig,  EntityManagerInterface $manager, $id = null)
     {
         $classe = $manager->getRepository(Classe::class)->findOneBy(['id' => $id]);
         if($classe != null){

@@ -18,7 +18,6 @@ class professeursAdminController extends AbstractController {
 
     /**
      * @Route("/admin/professeurs", name="admin.professeurs.list")
-     * @param Request $request
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @return Response
@@ -26,15 +25,14 @@ class professeursAdminController extends AbstractController {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function showList(Request $request, Environment $twig,  EntityManagerInterface $manager)
+    public function showList(Environment $twig,  EntityManagerInterface $manager)
     {
         $professeurs = $manager->getRepository(Professeur::class)->findAll();
         return new Response($twig->render('Admin/professeursAdmin/professeursAdminList.html.twig', ["professeurs" => $professeurs]));
     }
 
     /**
-     * @Route("/admin/professeurs/{id}", name="admin.professeurs.edit")
-     * @param Request $request
+     * @Route("/admin/professeurs/show/{id}", name="admin.professeurs.show")
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @param null $id
@@ -43,7 +41,39 @@ class professeursAdminController extends AbstractController {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function edit(Request $request, Environment $twig,  EntityManagerInterface $manager, $id = null)
+    public function show(Environment  $twig, EntityManagerInterface $manager, $id = null): Response
+    {
+        $professeur = $manager->getRepository(Professeur::class)->findOneBy(['id' => $id]);
+        if($professeur != null){
+            return new Response($twig->render('Admin/professeursAdmin/professeursAdminShow.html.twig', ["professeur" => $professeur]));
+        }
+        return new Response($twig->render('404NotFound.html.twig'));
+    }
+
+    /**
+     * @Route("/admin/professeurs/create", name="admin.professeurs.create")
+     * @param Environment $twig
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function create(Environment $twig): Response
+    {
+        return new Response($twig->render('Admin/professeursAdmin/professeursAdminCreate.html.twig'));
+    }
+
+    /**
+     * @Route("/admin/professeurs/{id}", name="admin.professeurs.edit")
+     * @param Environment $twig
+     * @param EntityManagerInterface $manager
+     * @param null $id
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function edit(Environment $twig,  EntityManagerInterface $manager, $id = null)
     {
         $professeur = $manager->getRepository(Professeur::class)->findOneBy(['id' => $id]);
         if($professeur != null){

@@ -19,7 +19,6 @@ class promotionsAdminController extends AbstractController {
 
     /**
      * @Route("/admin/promotions", name="admin.promotions.list")
-     * @param Request $request
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @return Response
@@ -30,7 +29,27 @@ class promotionsAdminController extends AbstractController {
     public function showList(Environment $twig,  EntityManagerInterface $manager): Response
     {
         $promotions = $manager->getRepository(Promotion::class)->findAll();
-        return new Response($twig->render('Admin/promotionsAdmin/promotionsAdminList.html.twig', ["promotions" => $promotions]));
+        $promotionActuelle = $manager->getRepository(Promotion::class)->findOneBy(['actuelle' => true]);
+        return new Response($twig->render('Admin/promotionsAdmin/promotionsAdminList.html.twig', ["promotions" => $promotions, "promotionActuelle" => $promotionActuelle]));
+    }
+
+    /**
+     * @Route("/admin/promotions/show/{id}", name="admin.promotions.show")
+     * @param Environment $twig
+     * @param EntityManagerInterface $manager
+     * @param null $id
+     * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function show(Environment  $twig, EntityManagerInterface $manager, $id = null): Response
+    {
+        $promotion = $manager->getRepository(Promotion::class)->findOneBy(['id' => $id]);
+        if($promotion != null){
+            return new Response($twig->render('Admin/promotionsAdmin/promotionsAdminShow.html.twig', ["promotion" => $promotion]));
+        }
+        return new Response($twig->render('404NotFound.html.twig'));
     }
 
     /**
@@ -76,7 +95,6 @@ class promotionsAdminController extends AbstractController {
 
     /**
      * @Route("/admin/promotions/edit/{id}", name="admin.promotions.edit")
-     * @param Request $request
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @param null $id
@@ -85,7 +103,7 @@ class promotionsAdminController extends AbstractController {
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function edit(Request $request, Environment $twig,  EntityManagerInterface $manager, $id = null): Response
+    public function edit(Environment $twig,  EntityManagerInterface $manager, $id = null): Response
     {
         $promotion = $manager->getRepository(Promotion::class)->findOneBy(['id' => $id]);
         if($promotion != null){

@@ -5,18 +5,18 @@
         <strong>Vous n'avez pas donné ce cours.</strong>
     {% else %}
         <div>
-            <ul>
-                <li>Date : {{ seance.getDateString() }}</li>
-                <li>Matière : {{ seance.matiere.nomMatiere }}</li>
-                <li>Groupes :
+            <ul class="list-group">
+                <li class="list-group-item">Date : {{ seance.getDateString() }}</li>
+                <li class="list-group-item">Matière : {{ seance.matiere.nomMatiere }}</li>
+                <li class="list-group-item">Groupes :
                     {% for groupe in seance.groupes %}
                         {{ groupe.nomGroupe }}
                     {% endfor %}
                 </li>
-                <li>Nombre d'étudiants absents : {{ seance.absences|length }}</li>
+                <li class="list-group-item">Nombre d'étudiants absents : {{ seance.absences|length }}</li>
             </ul>
         </div>
-        <div>
+        <div style="margin-top:20px;">
             <table class="table">
                 <thead class="table-dark">
                 <td>Étudiant</td>
