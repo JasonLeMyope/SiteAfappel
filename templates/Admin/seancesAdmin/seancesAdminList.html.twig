@@ -11,6 +11,7 @@
             <thead class="table-dark">
             <td>Date</td>
             <td>Matière</td>
+            <td>Professeur</td>
             <td>Étudiants absents</td>
             <td>Opérations</td>
             </thead>
@@ -19,6 +20,7 @@
                 <tr class="bg-light">
                     <td>{{ seance.getDateString() }}</td>
                     <td>{{ seance.matiere.nomMatiere }}</td>
+                    <td>{{ seance.professeur.prenomProfesseur }} {{ seance.professeur.nomProfesseur }}</td>
                     <td>{{ seance.absences|length }}</td>
                     <td>
                         <a href="{{ path('admin.seances.show',{'id': seance.id}) }}">
@@ -41,6 +43,7 @@
             <thead class="table-dark">
             <td>Date</td>
             <td>Matière</td>
+            <td>Professeur</td>
             <td>Étudiants absents</td>
             <td>Opérations</td>
             </thead>
@@ -49,6 +52,7 @@
                 <tr class="bg-light">
                     <td>{{ seance.getDateString() }}</td>
                     <td>{{ seance.matiere.nomMatiere }}</td>
+                    <td>{{ seance.professeur.prenomProfesseur }} {{ seance.professeur.nomProfesseur }}</td>
                     <td>{{ seance.absences|length }}</td>
                     <td>
                         <a href="{{ path('admin.seances.show',{'id': seance.id}) }}">

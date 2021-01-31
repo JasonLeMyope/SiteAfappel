@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
@@ -25,6 +24,7 @@ class matieresProfesseurController extends AbstractController
      * @Route("/professeur/matieres", name="professeur.matieres")
      * @param Environment $twig
      * @param EntityManagerInterface $manager
+     * @return Response
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError

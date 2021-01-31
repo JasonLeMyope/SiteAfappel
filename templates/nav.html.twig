@@ -25,6 +25,11 @@
                     Matières
                 </a>
             </span>
+            <span>
+                <a href="{{ path('professeur.absences') }}" class="nav-link text-dark" style="font-size: 1.5rem;">
+                    Absences
+                </a>
+            </span>
         {% elseif is_granted('ROLE_ADMIN') %}
             <span class="dropdown" style="margin-left: 20px;">
                 <a href="#" class="p-2 text-dark" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: 1.5rem;">

@@ -455,6 +455,18 @@ class AppFixtures extends Fixture
                 ],
                 'matiere' => $manager->getRepository(Matiere::class)->findOneBy(['nomMatiere' => 'Appli. Mobiles']),
                 'presences' => [
+                    ['etudiant' => $manager->getRepository(Etudiant::class)->findOneBy(['nomEtudiant' => 'Durand']), 'presence' => false],
+                    ['etudiant' => $manager->getRepository(Etudiant::class)->findOneBy(['nomEtudiant' => 'Dubois']), 'presence' => false],
+                ]
+            ],
+            [
+                'professeur' => $manager->getRepository(Professeur::class)->findOneBy(['arpege' => '000000008ABCD']),
+                'groups' => [
+                    $manager->getRepository(Groupe::class)->findOneBy(['annee' => '2020', 'nomGroupe' => 'S4-A1']),
+                    $manager->getRepository(Groupe::class)->findOneBy(['annee' => '2020', 'nomGroupe' => 'S4-A2']),
+                ],
+                'matiere' => $manager->getRepository(Matiere::class)->findOneBy(['nomMatiere' => 'Appli. Mobiles']),
+                'presences' => [
                     ['etudiant' => $manager->getRepository(Etudiant::class)->findOneBy(['nomEtudiant' => 'Durand']), 'presence' => true],
                     ['etudiant' => $manager->getRepository(Etudiant::class)->findOneBy(['nomEtudiant' => 'Dubois']), 'presence' => false],
                 ]
@@ -484,7 +496,7 @@ class AppFixtures extends Fixture
         $manager->flush();
         $seances = $manager->getRepository(Seance::class)->findAll();
         $etudiant = $manager->getRepository(Etudiant::class)->findOneBy(['nomEtudiant' => 'Dubois']);
-        $absence = $manager->getRepository(Absence::class)->findOneBy(['seance' => $seances[0], 'etudiant' => $etudiant]);
+        $absence = $manager->getRepository(Absence::class)->findOneBy(['seance' => $seances[3], 'etudiant' => $etudiant]);
         $absence->setJustifiee(true);
         $absence->setJustification("Panne de réveil");
         $manager->persist($absence);

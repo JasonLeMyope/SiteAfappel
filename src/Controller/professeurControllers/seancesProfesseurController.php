@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Controller\professeurControllers;
 
 use App\Entity\Professeur;
