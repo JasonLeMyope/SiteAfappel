@@ -5,6 +5,7 @@ namespace App\Controller\professeurControllers;
 use App\Entity\Matiere;
 use App\Entity\Professeur;
 use App\Entity\Promotion;
+use App\Entity\Seance;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,7 +39,16 @@ class absencesProfesseurController extends AbstractController
             $classesActuelles = $promotionActuelle->getClasses();
             $groupesActuels = [];
             foreach($classesActuelles as $classe){
-                foreach($classe->getGroupes() as $groupe){ $groupesActuels[] = $groupe; }
+                foreach ($classe->getGroupes() as $groupe){
+                    $verif = true;
+                    foreach($groupesActuels as $groupeActuel){
+                        if($groupe->getId() == $groupeActuel->getId()){
+                            $verif = false;
+                            break;
+                        }
+                    }
+                    if($verif){ $groupesActuels[] = $groupe; }
+                }
             }
             $seancesTriees = [];
             foreach($groupesActuels as $groupe){

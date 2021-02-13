@@ -262,7 +262,7 @@ class AppFixtures extends Fixture
                     ['nomGroupe' => 'S4-B1', 'annee' => '2020']
                 ]
             ],
-            ['username' => 'alaurent', 'ine' => '0000000010J', 'prenomEtudiant' => 'Agathe', 'nomEtudiant' => 'Laurent', 'dateNaissance' => '04-01-2000', 'email' => '@edu.univ-fcomte.fr', 'groupes' =>
+            ['username' => 'alaurent', 'ine' => '0000000010J', 'prenomEtudiant' => 'Agathe', 'nomEtudiant' => 'Laurent', 'dateNaissance' => '04-01-2000', 'email' => 'agathe.laurent@edu.univ-fcomte.fr', 'groupes' =>
                 [
                     ['nomGroupe' => 'S1-B2', 'annee' => '2018'],
                     ['nomGroupe' => 'S2-B2', 'annee' => '2019'],
@@ -506,7 +506,7 @@ class AppFixtures extends Fixture
     public function loadAdmin(objectManager $manager){
         $newUser = new User();
         $newUser->setUsername('admin');
-        $newUser->setPassword($this->passwordEncoder->encodePassword($newUser, 'salut'));
+        $newUser->setPassword($this->passwordEncoder->encodePassword($newUser, 'saucisson'));
         $newUser->setRoles(["ROLE_ADMIN"]);
         $newUser->setType("Admin");
         $newUser->setTypeId(-1);

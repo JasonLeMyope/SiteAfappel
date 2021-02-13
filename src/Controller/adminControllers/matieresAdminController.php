@@ -6,10 +6,13 @@ use App\Entity\Matiere;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -21,11 +24,11 @@ class matieresAdminController extends AbstractController {
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function showList(Environment $twig,  EntityManagerInterface $manager)
+    public function showList(Environment $twig,  EntityManagerInterface $manager): Response
     {
         $matieres = $manager->getRepository(Matiere::class)->findAll();
         return new Response($twig->render('Admin/matieresAdmin/matieresAdminList.html.twig', ["matieres" => $matieres]));
@@ -37,9 +40,9 @@ class matieresAdminController extends AbstractController {
      * @param EntityManagerInterface $manager
      * @param null $id
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function show(Environment  $twig, EntityManagerInterface $manager, $id = null): Response
     {
@@ -54,9 +57,9 @@ class matieresAdminController extends AbstractController {
      * @Route("/admin/matieres/create", name="admin.matieres.create")
      * @param Environment $twig
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function create(Environment $twig): Response
     {
@@ -64,21 +67,16 @@ class matieresAdminController extends AbstractController {
     }
 
     /**
-     * @Route("/admin/matieres/{id}", name="admin.matieres.edit")
-     * @param Environment $twig
+     * @Route("/admin/matieres/createSubmit", name="admin.matieres.createSubmit")
      * @param EntityManagerInterface $manager
-     * @param null $id
-     * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @return RedirectResponse
      */
-    public function edit(Environment $twig,  EntityManagerInterface $manager, $id = null)
+    public function createSubmit(EntityManagerInterface $manager): RedirectResponse
     {
-        $matiere = $manager->getRepository(Matiere::class)->findOneBy(['id' => $id]);
-        if($matiere != null){
-            return new Response($twig->render('Admin/matieresAdmin/groupesAdminEdit.html.twig', ["matiere" => $matiere]));
-        }
-        return new Response($twig->render('404NotFound.html.twig'));
+        $matiere = new Matiere();
+        $matiere->setNomMatiere($_POST['nomMatiere']);
+        $manager->persist($matiere);
+        $manager->flush();
+        return $this->redirectToRoute('admin.matieres.list');
     }
 }

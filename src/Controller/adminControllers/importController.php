@@ -37,8 +37,9 @@ class importController extends AbstractController {
 
     /**
      * @Route("/admin/download", name="admin.download")
-     **/
-    public function downloadFileAction(){
+     */
+    public function downloadFileAction(): BinaryFileResponse
+    {
         $response = new BinaryFileResponse(__DIR__ . '/../../Tables/Exemple.xlsx');
         $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,'Exemple.xlsx');
         return $response;

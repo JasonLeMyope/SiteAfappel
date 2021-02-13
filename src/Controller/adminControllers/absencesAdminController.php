@@ -7,10 +7,13 @@ use App\Entity\Promotion;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
 * @IsGranted("ROLE_ADMIN")
@@ -22,11 +25,11 @@ class absencesAdminController extends AbstractController {
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function showList(Environment $twig,  EntityManagerInterface $manager)
+    public function showList(Environment $twig,  EntityManagerInterface $manager): Response
     {
         $promotionActuelle = $manager->getRepository(Promotion::class)->findOneBy(['actuelle' => true]);
         $classesActuelles = $promotionActuelle->getClasses();
@@ -61,9 +64,9 @@ class absencesAdminController extends AbstractController {
      * @param EntityManagerInterface $manager
      * @param null $id
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function show(Environment  $twig, EntityManagerInterface $manager, $id = null): Response
     {
@@ -85,21 +88,36 @@ class absencesAdminController extends AbstractController {
     }
 
     /**
-     * @Route("/admin/absences/{id}", name="admin.absences.edit")
+     * @Route("/admin/absences/justify/{id}", name="admin.absences.justify")
      * @param Environment $twig
      * @param EntityManagerInterface $manager
      * @param null $id
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function edit(Environment $twig,  EntityManagerInterface $manager, $id = null)
+    public function justify(Environment $twig,  EntityManagerInterface $manager, $id = null): Response
     {
         $absence = $manager->getRepository(Absence::class)->findOneBy(['id' => $id]);
         if($absence != null){
-            return new Response($twig->render('Admin/absencesAdmin/absencesAdminEdit.html.twig', ["absence" => $absence]));
+            return new Response($twig->render('Admin/absencesAdmin/absencesAdminJustify.html.twig', ["absence" => $absence]));
         }
         return new Response($twig->render('404NotFound.html.twig'));
+    }
+
+    /**
+     * @Route("admin/absences/justifySubmit", name="admin.absences.justifySubmit")
+     * @param EntityManagerInterface $manager
+     * @return RedirectResponse
+     */
+    public function justifySubmit(EntityManagerInterface $manager): RedirectResponse
+    {
+        $absence = $manager->getRepository(Absence::class)->findOneBy(['id' => $_POST['id']]);
+        $absence->setJustifiee(true);
+        $absence->setJustification($_POST['justification']);
+        $manager->persist($absence);
+        $manager->flush();
+        return $this->redirectToRoute('admin.absences.list');
     }
 }
