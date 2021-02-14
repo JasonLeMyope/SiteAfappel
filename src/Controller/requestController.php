@@ -33,39 +33,36 @@ class requestController extends AbstractController {
     {
         $etudiant = $manager->getRepository(Etudiant::class)->findOneBy(['dateNaissance' => $birthdate, 'ine' => $ine]);
         if($etudiant != null){
-            $donneesRenvoyes = ['id' => $etudiant->getId()];
-            $reponse = new JsonResponse($donneesRenvoyes);
-            return $reponse;
+            $donneesRenvoyees = ['id' => $etudiant->getId()];
+            return new JsonResponse($donneesRenvoyees);
         }
         return $this->generateErrorJSON("Erreur 11 : L'étudiant n'a pas été trouvé dans la base de données.");
     }
 
     /**
      * @Route("/request/inscription/teacher/{arpege}/{birthdate}", name="requete.inscriptionTeacher", methods={"GET"})
-     * @param Request $request
      * @param EntityManagerInterface $manager
      * @param null $arpege
      * @param null $birthdate
      * @return JsonResponse|null
      */
-    public function inscriptionTeacher(Request $request, EntityManagerInterface $manager, $arpege = null, $birthdate = null): ?JsonResponse
+    public function inscriptionTeacher(EntityManagerInterface $manager, $arpege = null, $birthdate = null): ?JsonResponse
     {
         $professeur = $manager->getRepository(Professeur::class)->findOneBy(['dateNaissance' => $birthdate, 'arpege' => $arpege]);
         if($professeur != null){
-            $donneesRenvoyes = ['id' => $professeur->getId()];
-            $reponse = new JsonResponse($donneesRenvoyes);
-            return $reponse;
+            $donneesRenvoyees = ['id' => $professeur->getId()];
+            return new JsonResponse($donneesRenvoyees);
         }
         return $this->generateErrorJSON("Erreur 12 : L'enseignant n'a pas été trouvé dans la base de données.");
     }
 
     /**
      * @Route("/request/session/{id}", name="requete.creationSession", methods={"GET"})
-     * @param Request $request
      * @param EntityManagerInterface $manager
      * @param null $id
+     * @return JsonResponse
      */
-    public function creationSession(Request $request, EntityManagerInterface $manager, $id = null): JsonResponse
+    public function creationSession(EntityManagerInterface $manager, $id = null): JsonResponse
     {
         $professeur = $manager->getRepository(Professeur::class)->findOneBy(['id' => $id]);
         if($professeur != null){
@@ -94,21 +91,19 @@ class requestController extends AbstractController {
             for($i=0;$i<count($groupes);$i++){
                 $groupesEnvoyes[] = ['id' => $groupes[$i]->getId(), 'label' => $groupes[$i]->getNomGroupe()];
             }
-            $donneesRenvoyes = ['disciplines' => $matieresEnvoyees, 'groups' => $groupesEnvoyes];
-            $reponse = new JsonResponse($donneesRenvoyes);
-            return $reponse;
+            $donneesRenvoyees = ['disciplines' => $matieresEnvoyees, 'groups' => $groupesEnvoyes];
+            return new JsonResponse($donneesRenvoyees);
         }
         return $this->generateErrorJSON("Erreur 12 : L'enseignant n'a pas été trouvé dans la base de données.");
     }
 
     /**
      * @Route("/request/group/{id}", name="requete.getGroupe", methods={"GET"})
-     * @param Request $request
      * @param EntityManagerInterface $manager
      * @param null $id
      * @return null
      */
-    public function getGroupe(Request $request, EntityManagerInterface $manager, $id = null): ?JsonResponse
+    public function getGroupe(EntityManagerInterface $manager, $id = null): ?JsonResponse
     {
         $groupe = $manager->getRepository(Groupe::class)->findOneBy(['id' => $id]);
         $etudiantsEnvoyes = [];
@@ -117,9 +112,8 @@ class requestController extends AbstractController {
             for($i=0;$i<count($etudiants);$i++){
                 $etudiantsEnvoyes[] = ['id' => $etudiants[$i]->getId(), 'prenomEtudiant' => $etudiants[$i]->getPrenomEtudiant(), 'nomEtudiant' => $etudiants[$i]->getNomEtudiant()];
             }
-            $donneesRenvoyes = ['students' => $etudiantsEnvoyes];
-            $reponse = new JsonResponse($donneesRenvoyes);
-            return $reponse;
+            $donneesRenvoyees = ['students' => $etudiantsEnvoyes];
+            return new JsonResponse($donneesRenvoyees);
         }
         return $this->generateErrorJSON("Erreur 13 : Le groupe n'a pas été trouvé dans la base de données.");
     }
@@ -128,12 +122,22 @@ class requestController extends AbstractController {
      * @Route("/request/call/validate", name="requete.validationAppel", methods={"POST"})
      * @param Request $request
      * @param EntityManagerInterface $manager
+     * @return JsonResponse
      */
     public function validationAppel(Request $request, EntityManagerInterface $manager): JsonResponse
     {
         $data = $this->getDataFromJSON($request);
         if($data != null){
             $seance = new Seance();
+            if($data['idSeance'] != -1){
+                $seance = $manager->getRepository(Seance::class)->findOneBy(['id' => $data['idSeance']]);
+                if($seance == null){ return $this->generateErrorJSON("Erreur 15 : La séance n'a pas été trouvée dans la base de données."); }
+                foreach($seance->getAbsences() as $absence){
+                    $seance->removeAbsence($absence);
+                    $manager->remove($absence);
+                }
+                foreach($seance->getGroupes() as $groupe){ $seance->removeGroupe($groupe); }
+            }
             $date = DateTime::createFromFormat("Y-m-d H:i:s", date("Y-m-d H:i:s"));
             $seance->setDate($date);
             for($i=0;$i<count($data['groupsId']);$i++){
@@ -164,11 +168,52 @@ class requestController extends AbstractController {
             }
             $manager->persist($seance);
             $manager->flush();
-            $donneesRenvoyes = ['ok' => true];
-            $reponse = new JsonResponse($donneesRenvoyes);
-            return $reponse;
+            $donneesRenvoyees = ['ok' => true];
+            return new JsonResponse($donneesRenvoyees);
         }
         return $this->generateErrorJSON("Erreur 0 : Le JSON envoyé n'a pas pu être décodé.");
+    }
+
+    /**
+     * @Route("/request/call/{id}", name="requete.getAppel", methods={"GET"})
+     * @param EntityManagerInterface $manager
+     * @param null $id
+     * @return JsonResponse
+     */
+    public function getDernierAppel(EntityManagerInterface $manager, $id = null): JsonResponse
+    {
+        $professeur = $manager->getRepository(Professeur::class)->findOneBy(['id' => $id]);
+        if($professeur == null){ return $this->generateErrorJSON("Erreur 12 : L'enseignant n'a pas été trouvé dans la base de données."); }
+        $seances = $professeur->getSeances();
+        $seance = $seances[(count($seances)-1)];
+        if($seance == null){ return $this->generateErrorJSON("Erreur 15 : La séance n'a pas été trouvée dans la base de données."); }
+        $groupes = [];
+        $etudiants = [];
+        $etudiantsJSON = [];
+        foreach($seance->getGroupes() as $groupe){
+            foreach($groupe->getEtudiants() as $etudiant){ $etudiants[] = $etudiant; }
+            $groupes[] = ['id' => $groupe->getId()];
+        }
+        foreach($etudiants as $etudiant){
+            $presence = true;
+            foreach($seance->getAbsences() as $absence){
+                if($absence->getEtudiant()->getId() == $etudiant->getId()){ $presence = false; }
+            }
+            $etudiantsJSON[] = [
+                'id' => $etudiant->getId(),
+                'prenomEtudiant' => $etudiant->getPrenomEtudiant(),
+                'nomEtudiant' => $etudiant->getNomEtudiant(),
+                'presence' => $presence,
+            ];
+        }
+        $donneesRenvoyees = [
+            'idSeance' => $seance->getId(),
+            'idMatiere' => $seance->getMatiere()->getId(),
+            'idProfesseur' => $seance->getProfesseur()->getId(),
+            'groups' => $groupes,
+            'students' => $etudiantsJSON
+        ];
+        return new JsonResponse($donneesRenvoyees);
     }
 
     private function getDataFromJSON(Request $request): ?array
@@ -184,8 +229,7 @@ class requestController extends AbstractController {
     private function generateErrorJSON($msg): JsonResponse
     {
         $msg = $msg . "\nSi vous constatez cette erreur, veuillez contacter l'administrateur du site web Afappel.";
-        $donneesRenvoyes = ['requestError' => $msg];
-        $reponse = new JsonResponse($donneesRenvoyes);
-        return $reponse;
+        $donneesRenvoyees = ['requestError' => $msg];
+        return new JsonResponse($donneesRenvoyees);
     }
 }
