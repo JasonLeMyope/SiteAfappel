@@ -474,7 +474,7 @@ class AppFixtures extends Fixture
         ];
         foreach($seances as $seance){
             $new_seance = new Seance();
-            $date = DateTime::createFromFormat("Y-m-d H:i:s", date("Y-m-d H:i:s"));
+            $date = date("d-m-Y H:i:s");
             $new_seance->setDate($date);
             $new_seance->setMatiere($seance['matiere']);
             $new_seance->setProfesseur($seance['professeur']);

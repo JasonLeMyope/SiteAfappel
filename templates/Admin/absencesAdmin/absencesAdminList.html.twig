@@ -18,7 +18,7 @@
             <tbody>
             {% for absence in absencesActuelles %}
                 <tr class="bg-light">
-                    <td>{{ absence.seance.getDateString() }}</td>
+                    <td>{{ absence.seance.date }}</td>
                     <td>{{ absence.seance.matiere.nomMatiere }}</td>
                     <td>{{ absence.etudiant.prenomEtudiant }} {{ absence.etudiant.nomEtudiant }}</td>
                     <td>
@@ -63,7 +63,7 @@
             <tbody>
             {% for absence in absences %}
                 <tr class="bg-light">
-                    <td>{{ absence.seance.getDateString() }}</td>
+                    <td>{{ absence.seance.date }}</td>
                     <td>{{ absence.seance.matiere.nomMatiere }}</td>
                     <td>{{ absence.etudiant.prenomEtudiant }} {{ absence.etudiant.nomEtudiant }}</td>
                     <td>

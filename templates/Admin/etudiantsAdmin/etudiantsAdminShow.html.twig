@@ -57,7 +57,7 @@
                 <tbody>
                 {% for absence in etudiant.absences %}
                     <tr class="bg-light">
-                        <td>{{ absence.seance.getDateString() }}</td>
+                        <td>{{ absence.seance.date }}</td>
                         <td>{{ absence.seance.matiere.nomMatiere }}</td>
                         <td>
                             {% if absence.justifiee == true %}

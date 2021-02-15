@@ -129,6 +129,8 @@ class requestController extends AbstractController {
         $data = $this->getDataFromJSON($request);
         if($data != null){
             $seance = new Seance();
+            $date = date("d-m-Y H:i:s");
+            $seance->setDate($date);
             if($data['idSeance'] != -1){
                 $seance = $manager->getRepository(Seance::class)->findOneBy(['id' => $data['idSeance']]);
                 if($seance == null){ return $this->generateErrorJSON("Erreur 15 : La séance n'a pas été trouvée dans la base de données."); }
@@ -138,8 +140,6 @@ class requestController extends AbstractController {
                 }
                 foreach($seance->getGroupes() as $groupe){ $seance->removeGroupe($groupe); }
             }
-            $date = DateTime::createFromFormat("Y-m-d H:i:s", date("Y-m-d H:i:s"));
-            $seance->setDate($date);
             for($i=0;$i<count($data['groupsId']);$i++){
                 $groupe = $manager->getRepository(Groupe::class)->findOneBy(['id' => $data['groupsId'][$i]]);
                 if($groupe != null){ $seance->addGroupe($groupe); }

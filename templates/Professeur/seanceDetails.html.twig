@@ -6,7 +6,7 @@
     {% else %}
         <div>
             <ul class="list-group">
-                <li class="list-group-item">Date : {{ seance.getDateString() }}</li>
+                <li class="list-group-item">Date : {{ seance.date }}</li>
                 <li class="list-group-item">Matière : {{ seance.matiere.nomMatiere }}</li>
                 <li class="list-group-item">Groupes :
                     {% for groupe in seance.groupes %}

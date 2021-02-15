@@ -56,7 +56,7 @@
                 <tbody>
                 {% for seance in professeur.seances %}
                     <tr class="bg-light">
-                        <td>{{ seance.getDateString() }}</td>
+                        <td>{{ seance.date }}</td>
                         <td>{{ seance.matiere.nomMatiere }}</td>
                         <td>
                             {% for groupe in seance.groupes %}

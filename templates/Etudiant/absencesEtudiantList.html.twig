@@ -47,7 +47,7 @@
                 <tbody class="bg-light">
                     {% for absence in absencesInjustifiees %}
                         <tr>
-                            <td>{{ absence.seance.getDateString() }}</td>
+                            <td>{{ absence.seance.date }}</td>
                             <td>{{ absence.seance.matiere.nomMatiere }}</td>
                             <td>{{ absence.seance.professeur.prenomProfesseur }} {{ absence.seance.professeur.nomProfesseur }}</td>
                         </tr>
@@ -72,7 +72,7 @@
                 <tbody class="bg-light">
                 {% for absence in absencesJustifiees %}
                     <tr>
-                        <td>{{ absence.seance.getDateString() }}</td>
+                        <td>{{ absence.seance.date }}</td>
                         <td>{{ absence.seance.matiere.nomMatiere }}</td>
                         <td>{{ absence.seance.professeur.prenomProfesseur }} {{ absence.seance.professeur.nomProfesseur }}</td>
                         <td>{{ absence.justification }}</td>
