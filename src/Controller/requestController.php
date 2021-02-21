@@ -9,7 +9,6 @@ use App\Entity\Matiere;
 use App\Entity\Professeur;
 use App\Entity\Promotion;
 use App\Entity\Seance;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -192,7 +191,7 @@ class requestController extends AbstractController {
         $etudiantsJSON = [];
         foreach($seance->getGroupes() as $groupe){
             foreach($groupe->getEtudiants() as $etudiant){ $etudiants[] = $etudiant; }
-            $groupes[] = ['id' => $groupe->getId()];
+            $groupes[] = ['id' => $groupe->getId(), 'label' => $groupe->getNomGroupe()];
         }
         foreach($etudiants as $etudiant){
             $presence = true;
@@ -209,6 +208,7 @@ class requestController extends AbstractController {
         $donneesRenvoyees = [
             'idSeance' => $seance->getId(),
             'idMatiere' => $seance->getMatiere()->getId(),
+            'labelMatiere' => $seance->getMatiere()->getNomMatiere(),
             'idProfesseur' => $seance->getProfesseur()->getId(),
             'groups' => $groupes,
             'students' => $etudiantsJSON
